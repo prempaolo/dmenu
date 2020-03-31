@@ -1,11 +1,31 @@
 --- dmenu.c
 +++ dmenu.c
-@@ -755,7 +752,7 @@ static void
- usage(void)
- {
- 	fputs("usage: dmenu [-bfiv] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"
--	      "             [-h height] [-x xoffset] [-y yoffset] [-w width]\n"
-+	      "             [-h height]\n"
- 	      "             [-nb color] [-nf color] [-sb color] [-sf color] [-w windowid]\n", stderr);
- 	exit(1);
- }
+@@ -601,13 +600,8 @@ setup(void)
+ 	int a, di, n, area = 0;
+ #endif
+ 	/* init appearance */
+-	for (j = 0; j < SchemeLast; j++) {
+-		scheme[j] = drw_scm_create(drw, (const char**)colors[j], 2);
+-	}
+-	for (j = 0; j < SchemeOut; ++j) {
+-		for (i = 0; i < 2; ++i)
+-			free(colors[j][i]);
+-	}
++	for (j = 0; j < SchemeLast; j++)
++		scheme[j] = drw_scm_create(drw, colors[j], 2);
+ 
+ 	clip = XInternAtom(dpy, "CLIPBOARD",   False);
+ 	utf8 = XInternAtom(dpy, "UTF8_STRING", False);
+@@ -753,11 +712,8 @@ main(int argc, char *argv[])
+ 		die("could not get embedding window attributes: 0x%lx",
+ 		    parentwin);
+ 	drw = drw_create(dpy, screen, root, wa.width, wa.height);
+-	readxresources();
+-	if (!drw_fontset_create(drw, (const char**)fonts, LENGTH(fonts)))
++	if (!drw_fontset_create(drw, fonts, LENGTH(fonts)))
+ 		die("no fonts could be loaded.");
+-
+-	free(fonts[0]);
+ 	lrpad = drw->fonts->h;
+ 
+ #ifdef __OpenBSD__
